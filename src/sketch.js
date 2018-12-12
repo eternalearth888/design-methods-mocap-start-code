@@ -34,7 +34,7 @@ function preload() {
   // bubbleAnimation = loadAnimation()
 
   //fish animations
-  fish1Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
+  fish1Animation = loadAnimation("images/fish/gradientfish0.png", "images/fish/gradientfish9.png");
   sharkAnimation = loadAnimation("images/sharks/shark0000.png", "images/sharks/shark0090.png");
 }
 
@@ -204,7 +204,7 @@ function Fish() {
   this.y = random(0, 400);
   this.speed = 1;
   this.frame = 0;
-  this.numFrames = 91;
+  this.numFrames = 10;
 
   this.display = function () {
     this.frame = this.frame >= this.numFrames ? 0 : this.frame + 1;
