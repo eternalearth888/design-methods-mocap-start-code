@@ -1,6 +1,7 @@
 // Holds our socket server connection
 let socket;
 
+
 // positions
 var mocapZ = 0;
 
@@ -17,9 +18,8 @@ var castStartAnimation;
 
 // fishes
 var fish1Animation;
-var fish2Animation;
-var fish3Animation;
-var fish4Animation;
+let x = 0;
+let y = 0;
 
 var fishes = [];
 
@@ -31,14 +31,14 @@ var sharks = [];
 var bubbleAnimation;
 
 // timer
-var timer = 10; // 60 seconds
+var timer = 30; // 60 seconds
 
 
 // preload animations
 function preload() {
   // preload start gui animation
   castStartAnimation = loadAnimation("images/castStart/Frame001.png", "images/castStart/Frame012.png");
-  
+
   // bubble animations
   // bubbleAnimation = loadAnimation()
 
@@ -66,30 +66,24 @@ function setup() {
 
       // Ex of drawing a circle with x and y coords from a rigid body
       // data[5] is bobber id for summer team
-      if (data[5].y !== null) {
-        // Draw a blue circle
-        // background(0);
-        // fill(0, 0, 255);
-        // noStroke();
-
+      if (data[7].y !== null) {
         // Map between two ranges
-        const x = (1 - (data[5].y + 3500) / 7000) * 1000;
-        const y = (1 - (data[5].x + 2000) / 5600) * 400;
-        mocapZ = (1 -(data[5].z + 2000) / 5600) * 400;
+        x = (data[7].y + 3256) * (windowWidth / 3600);
+        y = (data[7].x - 1053) * (windowHeight / 1400);
         ellipse(x, y, 20, 20);
 
         // positionvalues of the mocap
-        console.log("X: " + data[5].x);
-        console.log("Y: " + data[5].y);
-         // make sure mocap is under 200 for it to activate
-        console.log("Z: " + mocapZ);
+        console.log("X: " + x);
+        console.log("Y: " + y);
+        // // make sure mocap is under 200 for it to activate
+        // console.log("Z: " + mocapZ);
       }
     }
   );
 
   // Put your setup code here
   // you can delete this if you want
-  createCanvas(900, 400);
+  createCanvas(windowWidth, windowHeight);
   // CODE GOES HERE 
   // water video background
   water = createVideo('images/water.mp4');
@@ -115,13 +109,20 @@ function draw() {
   if (!isGamePlaying) {
     // animate start gui
     castStart.display();
+    // did someone hover over our graphic
+    var d = dist(x, y, (windowWidth) / 2, (windowHeight) / 2);
+    if (d < 500 && !isGamePlaying) {
+      // delete animation by creating a new canvas for the game to begin
+      isGamePlaying = true;
+      water.loop();
+    }
   }
 
   //START THE TIMER WHEN THE GAME STARTS
   if (isGamePlaying) {
     textAlign(CENTER, TOP);
     textSize(50);
-    text(timer, 850, 10);
+    text(timer, windowWidth - 25, 5);
   }
 
   // PLAY GAME
@@ -134,7 +135,7 @@ function draw() {
       fishes[i].move();
       fishes[i].display();
 
-      if ((mouseX > fishes[i].x) && (mouseX < fishes[i].x + 80) && (mouseY > fishes[i].y) && (mouseY < fishes[i].y + 80)) {
+      if ((x > fishes[i].x) && (x < fishes[i].x + 80) && (y > fishes[i].y) && (y < fishes[i].y + 80)) {
         //delete fish from array
         fishToBeDeleted = i;
         console.log(fishToBeDeleted);
@@ -147,35 +148,35 @@ function draw() {
     }
 
     // SHARKS
-     var sharksToBeDeleted = -1;
-     for (var i = 0; i < sharks.length; i++) {
-       // if not deleted, keep moving
-       sharks[i].move();
-       sharks[i].display();
+    var sharksToBeDeleted = -1;
+    for (var i = 0; i < sharks.length; i++) {
+      // if not deleted, keep moving
+      sharks[i].move();
+      sharks[i].display();
 
-       if ((mouseX > sharks[i].x) && (mouseX < sharks[i].x + 150) && (mouseY > sharks[i].y) && (mouseY < sharks[i].y + 100)) {
-         //delete fish from array
-         sharksToBeDeleted = i;
-         console.log(sharksToBeDeleted);
-         // console.log("HOVER: " + fishes[i].x + ", " + fishes[i].y);
-       }
-     }
+      if ((x > sharks[i].x) && (x < sharks[i].x + 150) && (y > sharks[i].y) && (y < sharks[i].y + 100)) {
+        //delete fish from array
+        sharksToBeDeleted = i;
+        console.log(sharksToBeDeleted);
+        // console.log("HOVER: " + fishes[i].x + ", " + fishes[i].y);
+      }
+    }
 
-     if (sharksToBeDeleted > -1) {
-       sharks.splice(sharksToBeDeleted, 1);
-     }
+    if (sharksToBeDeleted > -1) {
+      sharks.splice(sharksToBeDeleted, 1);
+    }
 
-     // TIMER CHANGES
-     // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
-     if (frameCount % 60 == 0 && timer > 0) { 
-       timer--;
-     }
-     // did the timer end before you could catch all the fish
-     if (timer == 0 && fishes.length != 0) {
-       isTimeUp = true;
-     } else if (timer > 0 && fishes.length == 0) {
-       isAllFished = true;
-     }
+    // TIMER CHANGES
+    // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+    if (frameCount % 60 == 0 && timer > 0) {
+      timer--;
+    }
+    // did the timer end before you could catch all the fish
+    if (timer == 0 && fishes.length != 0) {
+      isTimeUp = true;
+    } else if (timer > 0 && fishes.length == 0) {
+      isAllFished = true;
+    }
   }
 
   // GAME OVER SCREENS
@@ -189,7 +190,7 @@ function draw() {
   if (isAllFished) {
     textAlign(CENTER, CENTER);
     textSize(100);
-    text("GOT 'EM!", width / 2, height / 2);
+    text("GOT 'EM!", (windowWidth) / 2, (windowHeight ) / 2);
   }
 }
 
@@ -199,22 +200,22 @@ function keyPressed() {
   water.loop();
 }
 
-function mousePressed() {
-  if (!isGamePlaying) {
-    var d = dist(mouseX, mouseY, 900 / 2, 350 / 2);
-    if (d < 100 && !isGamePlaying) {
-      // delete animation by creating a new canvas for the game to begin
-      isGamePlaying = true;
-      water.loop();
-    }
-  }
-}
+// function mousePressed() {
+//   if (!isGamePlaying) {
+//     var d = dist(x, y, (windowWidth - 1) / 2, (windowHeight - 1) / 2);
+//     if (d < 100 && !isGamePlaying) {
+//       // delete animation by creating a new canvas for the game to begin
+//       isGamePlaying = true;
+//       water.loop();
+//     }
+//   }
+// }
 
 // FISHES
 function FishGreen() {
   // initial left side of the screen
-  this.x = random(0, 900/9);
-  this.y = random(0, 400);
+  this.x = random(0, (windowWidth  / 8));
+  this.y = random(0, (windowHeight));
   this.speed = 1;
   this.frame = 0;
   this.numFrames = 91;
@@ -225,85 +226,19 @@ function FishGreen() {
     animation(fish1Animation, this.x, this.y);
   }
 
-  this.move = function() {
-    if (this.x > 900 + 100) {
+  this.move = function () {
+    if (this.x > (windowWidth) + 500) {
       this.x = 0;
     }
     this.x += (-this.speed, this.speed);
   }
 }
 
-// function FishOrange() {
-//   // initial left side of the screen
-//   this.x = random(0, 900 / 9);
-//   this.y = random(0, 400);
-//   this.speed = 1;
-//   this.frame = 0;
-//   this.numFrames = 91;
-
-//   this.display = function () {
-//     this.frame = this.frame >= this.numFrames ? 0 : this.frame + 1;
-//     fish2Animation.changeFrame(this.frame);
-//     animation(fish2Animation, this.x, this.y);
-//   }
-
-//   this.move = function () {
-//     if (this.x > 900 + 100) {
-//       this.x = 0;
-//     }
-//     this.x += (-this.speed, this.speed);
-//   }
-// }
-
-// function FishYellow() {
-//   // initial left side of the screen
-//   this.x = random(0, 900 / 9);
-//   this.y = random(0, 400);
-//   this.speed = 1;
-//   this.frame = 0;
-//   this.numFrames = 91;
-
-//   this.display = function () {
-//     this.frame = this.frame >= this.numFrames ? 0 : this.frame + 1;
-//     fish3Animation.changeFrame(this.frame);
-//     animation(fish3Animation, this.x, this.y);
-//   }
-
-//   this.move = function () {
-//     if (this.x > 900 + 100) {
-//       this.x = 0;
-//     }
-//     this.x += (-this.speed, this.speed);
-//   }
-// }
-
-// function FishPurple() {
-//   // initial left side of the screen
-//   this.x = random(0, 900 / 9);
-//   this.y = random(0, 400);
-//   this.speed = 1;
-//   this.frame = 0;
-//   this.numFrames = 91;
-
-//   this.display = function () {
-//     this.frame = this.frame >= this.numFrames ? 0 : this.frame + 1;
-//     fish4Animation.changeFrame(this.frame);
-//     animation(fish4Animation, this.x, this.y);
-//   }
-
-//   this.move = function () {
-//     if (this.x > 900 + 100) {
-//       this.x = 0;
-//     }
-//     this.x += (-this.speed, this.speed);
-//   }
-// }
-
 // Shark class
 function Shark() {
   // initial left side of the screen
-  this.x = random(0, 900 / 9);
-  this.y = random(0, 400);
+  this.x = random(0, (windowWidth) / 8);
+  this.y = random(0, (windowHeight));
   this.speed = 1;
   this.frame = 0;
   this.numFrames = 91;
@@ -315,7 +250,7 @@ function Shark() {
   }
 
   this.move = function () {
-    if (this.x > 900 + 100) {
+    if (this.x > windowWidth + 500) {
       this.x = 0;
     }
     this.x += (-this.speed, this.speed);
@@ -324,10 +259,8 @@ function Shark() {
 
 
 function StartGame() {
-  console.log("GRAB START GUI ANIMATIONS");
-
   this.display = function () {
-    animation(castStartAnimation, 900/2, 400/2);
+    animation(castStartAnimation, (windowWidth) / 2, (windowHeight) / 2);
   }
 
 }
