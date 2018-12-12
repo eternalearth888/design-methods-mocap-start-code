@@ -8,7 +8,8 @@ var mocapZ = 0;
 var water;
 // has the player started the game
 var isGamePlaying = false;
-var isGameOver = false;
+var isTimeUp = false;
+var isAllFished = false;
 
 // GUI ANIMATION CAST TO START
 var castStart;
@@ -30,7 +31,7 @@ var sharks = [];
 var bubbleAnimation;
 
 // timer
-var timer = 60; // 60 seconds
+var timer = 10; // 60 seconds
 
 
 // preload animations
@@ -117,6 +118,7 @@ function draw() {
   // we always want the water background
   image(water, 0, 0);
 
+
   //timer for when the game starts
   if (isGamePlaying) {
     textAlign(CENTER, TOP);
@@ -129,7 +131,7 @@ function draw() {
     castStart.display();
   }
 
-  if (isGamePlaying) {
+  if (isGamePlaying && !isTimeUp) {
     // DRAW AND DELETE FISH
     // check to see if mocap x,y is over image x,y
     // use mousex, mousey for now
@@ -160,7 +162,7 @@ function draw() {
        sharks[i].move();
        sharks[i].display();
 
-       if ((mouseX > sharks[i].x) && (mouseX < sharks[i].x + 100) && (mouseY > sharks[i].y) && (mouseY < sharks[i].y + 100)) {
+       if ((mouseX > sharks[i].x) && (mouseX < sharks[i].x + 150) && (mouseY > sharks[i].y) && (mouseY < sharks[i].y + 100)) {
          //delete fish from array
          sharksToBeDeleted = i;
          console.log(sharksToBeDeleted);
@@ -171,6 +173,30 @@ function draw() {
      if (sharksToBeDeleted > -1) {
        sharks.splice(sharksToBeDeleted, 1);
      }
+
+     // timer change
+     if (frameCount % 60 == 0 && timer > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+       timer--;
+     }
+     // did the timer end before you could catch all the fish
+     if (timer == 0 && fishes.length != 0) {
+       isTimeUp = true;
+     } else if (timer > 0 && fishes.length == 0) {
+       isAllFished = true;
+     }
+  }
+
+  // timer is up before they catch all the fish
+  if (isTimeUp) {
+    textAlign(CENTER, CENTER);
+    textSize(100);
+    text("TIME IS UP", width / 2, height / 2);
+  }
+
+  if (isAllFished) {
+    textAlign(CENTER, CENTER);
+    textSize(100);
+    text("GOT 'EM!", width / 2, height / 2);
   }
 
 
