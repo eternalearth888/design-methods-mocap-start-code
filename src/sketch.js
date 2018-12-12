@@ -44,10 +44,7 @@ function preload() {
 
   //fish animations
   fish1Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
-  // fish2Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
-  // fish3Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
-  // fish4Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
-  
+
   sharkAnimation = loadAnimation("images/sharks/shark0000.png", "images/sharks/shark0090.png");
 }
 
@@ -103,7 +100,7 @@ function setup() {
 
   // POPULATE ARRAY OF FISH OBJECTS AND SHARKS
   for (var i = 0; i < 5; i++) {
-    fishes.push(new Fish());
+    fishes.push(new FishGreen());
     fishes.push(new Shark());
   }
 
@@ -209,7 +206,6 @@ function mousePressed() {
       // delete animation by creating a new canvas for the game to begin
       isGamePlaying = true;
       water.loop();
-      console.log("MOUSE PRESSED");
     }
   }
 }
