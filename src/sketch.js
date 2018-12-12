@@ -47,7 +47,6 @@ function preload() {
   // fish2Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
   // fish3Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
   // fish4Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
-  // fish5Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
   
   sharkAnimation = loadAnimation("images/sharks/shark0000.png", "images/sharks/shark0090.png");
 }
@@ -72,9 +71,9 @@ function setup() {
       // data[5] is bobber id for summer team
       if (data[5].y !== null) {
         // Draw a blue circle
-        background(0);
-        fill(0, 0, 255);
-        noStroke();
+        // background(0);
+        // fill(0, 0, 255);
+        // noStroke();
 
         // Map between two ranges
         const x = (1 - (data[5].y + 3500) / 7000) * 1000;
@@ -100,17 +99,14 @@ function setup() {
   water.hide();
 
   // create start gui
-  castStart = new Start();
+  castStart = new StartGame();
 
-  // create an array of fish objects
+  // POPULATE ARRAY OF FISH OBJECTS AND SHARKS
   for (var i = 0; i < 5; i++) {
     fishes.push(new Fish());
     fishes.push(new Shark());
   }
 
-  // for (var i = 0; i < 3; i++) {
-  //   sharks.push(new Shark());
-  // }
 }
 
 function draw() {
@@ -118,24 +114,22 @@ function draw() {
   // we always want the water background
   image(water, 0, 0);
 
-
-  //timer for when the game starts
-  if (isGamePlaying) {
-    textAlign(CENTER, TOP);
-    textSize(50);
-    text(timer, 850, 10);
-  }
-  // Game has not started
+  // WHEN THE GAME IS IN STANDBY
   if (!isGamePlaying) {
     // animate start gui
     castStart.display();
   }
 
-  if (isGamePlaying && !isTimeUp) {
-    // DRAW AND DELETE FISH
-    // check to see if mocap x,y is over image x,y
-    // use mousex, mousey for now
+  //START THE TIMER WHEN THE GAME STARTS
+  if (isGamePlaying) {
+    textAlign(CENTER, TOP);
+    textSize(50);
+    text(timer, 850, 10);
+  }
 
+  // PLAY GAME
+  // DRAW AND DELETE FISH
+  if (isGamePlaying && !isTimeUp) {
     // FISHES
     var fishToBeDeleted = -1;
     for (var i = 0; i < fishes.length; i++) {
@@ -174,8 +168,9 @@ function draw() {
        sharks.splice(sharksToBeDeleted, 1);
      }
 
-     // timer change
-     if (frameCount % 60 == 0 && timer > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+     // TIMER CHANGES
+     // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+     if (frameCount % 60 == 0 && timer > 0) { 
        timer--;
      }
      // did the timer end before you could catch all the fish
@@ -186,6 +181,7 @@ function draw() {
      }
   }
 
+  // GAME OVER SCREENS
   // timer is up before they catch all the fish
   if (isTimeUp) {
     textAlign(CENTER, CENTER);
@@ -198,30 +194,6 @@ function draw() {
     textSize(100);
     text("GOT 'EM!", width / 2, height / 2);
   }
-
-
-  // MOACP
-  // check for z threshold and x/y position for the game to start
-  /*
-  if (isGamePlaying == false) {}
-    if (z < blah && x > bah) {
-      gameStart();
-      isGamePlaying = true;
-    }
-  } 
-
-  // redraw background and fish
-
-  if (isGamePlaying == true) {
-    // check position of mocap against the position of all the fishes
-    // compare player.x, player.y to fish.x,fish.y
-
-    // if positions match
-    // make fish disappear and draw bubble animation//
-    draw over bubble animation
-  }
-   */
-  // For debugging use `console.log` and open up the browser's inspector
 }
 
 // THIS IS HOW THE PROGRAM IS STARTED0
@@ -242,10 +214,9 @@ function mousePressed() {
   }
 }
 
-// Fish class
-function Fish() {
-  console.log("CREATING A FISH");
-    // initial left side of the screen
+// FISHES
+function FishGreen() {
+  // initial left side of the screen
   this.x = random(0, 900/9);
   this.y = random(0, 400);
   this.speed = 1;
@@ -266,10 +237,75 @@ function Fish() {
   }
 }
 
+// function FishOrange() {
+//   // initial left side of the screen
+//   this.x = random(0, 900 / 9);
+//   this.y = random(0, 400);
+//   this.speed = 1;
+//   this.frame = 0;
+//   this.numFrames = 91;
+
+//   this.display = function () {
+//     this.frame = this.frame >= this.numFrames ? 0 : this.frame + 1;
+//     fish2Animation.changeFrame(this.frame);
+//     animation(fish2Animation, this.x, this.y);
+//   }
+
+//   this.move = function () {
+//     if (this.x > 900 + 100) {
+//       this.x = 0;
+//     }
+//     this.x += (-this.speed, this.speed);
+//   }
+// }
+
+// function FishYellow() {
+//   // initial left side of the screen
+//   this.x = random(0, 900 / 9);
+//   this.y = random(0, 400);
+//   this.speed = 1;
+//   this.frame = 0;
+//   this.numFrames = 91;
+
+//   this.display = function () {
+//     this.frame = this.frame >= this.numFrames ? 0 : this.frame + 1;
+//     fish3Animation.changeFrame(this.frame);
+//     animation(fish3Animation, this.x, this.y);
+//   }
+
+//   this.move = function () {
+//     if (this.x > 900 + 100) {
+//       this.x = 0;
+//     }
+//     this.x += (-this.speed, this.speed);
+//   }
+// }
+
+// function FishPurple() {
+//   // initial left side of the screen
+//   this.x = random(0, 900 / 9);
+//   this.y = random(0, 400);
+//   this.speed = 1;
+//   this.frame = 0;
+//   this.numFrames = 91;
+
+//   this.display = function () {
+//     this.frame = this.frame >= this.numFrames ? 0 : this.frame + 1;
+//     fish4Animation.changeFrame(this.frame);
+//     animation(fish4Animation, this.x, this.y);
+//   }
+
+//   this.move = function () {
+//     if (this.x > 900 + 100) {
+//       this.x = 0;
+//     }
+//     this.x += (-this.speed, this.speed);
+//   }
+// }
+
 // Shark class
 function Shark() {
-  console.log("CREATING A SHARK");
-    // initial left side of the screen
+  // initial left side of the screen
   this.x = random(0, 900 / 9);
   this.y = random(0, 400);
   this.speed = 1;
@@ -291,7 +327,7 @@ function Shark() {
 }
 
 
-function Start(){
+function StartGame() {
   console.log("GRAB START GUI ANIMATIONS");
 
   this.display = function () {
