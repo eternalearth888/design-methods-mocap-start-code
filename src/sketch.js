@@ -8,6 +8,7 @@ var mocapZ = 0;
 var water;
 // has the player started the game
 var isGamePlaying = false;
+var isGameOver = false;
 
 // GUI ANIMATION CAST TO START
 var castStart;
@@ -15,6 +16,10 @@ var castStartAnimation;
 
 // fishes
 var fish1Animation;
+var fish2Animation;
+var fish3Animation;
+var fish4Animation;
+
 var fishes = [];
 
 // sharks
@@ -23,6 +28,9 @@ var sharks = [];
 
 // bubbles
 var bubbleAnimation;
+
+// timer
+var timer = 60; // 60 seconds
 
 
 // preload animations
@@ -34,7 +42,12 @@ function preload() {
   // bubbleAnimation = loadAnimation()
 
   //fish animations
-  fish1Animation = loadAnimation("images/fish/gradientfish0.png", "images/fish/gradientfish9.png");
+  fish1Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
+  // fish2Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
+  // fish3Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
+  // fish4Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
+  // fish5Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
+  
   sharkAnimation = loadAnimation("images/sharks/shark0000.png", "images/sharks/shark0090.png");
 }
 
@@ -91,11 +104,12 @@ function setup() {
   // create an array of fish objects
   for (var i = 0; i < 5; i++) {
     fishes.push(new Fish());
+    fishes.push(new Shark());
   }
 
-  for (var i = 0; i < 3; i++) {
-    sharks.push(new Shark());
-  }
+  // for (var i = 0; i < 3; i++) {
+  //   sharks.push(new Shark());
+  // }
 }
 
 function draw() {
@@ -103,6 +117,12 @@ function draw() {
   // we always want the water background
   image(water, 0, 0);
 
+  //timer for when the game starts
+  if (isGamePlaying) {
+    textAlign(CENTER, TOP);
+    textSize(50);
+    text(timer, 850, 10);
+  }
   // Game has not started
   if (!isGamePlaying) {
     // animate start gui
@@ -204,7 +224,7 @@ function Fish() {
   this.y = random(0, 400);
   this.speed = 1;
   this.frame = 0;
-  this.numFrames = 10;
+  this.numFrames = 91;
 
   this.display = function () {
     this.frame = this.frame >= this.numFrames ? 0 : this.frame + 1;
