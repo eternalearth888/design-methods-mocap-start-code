@@ -24,8 +24,8 @@ let y = 0;
 var fishes = [];
 
 // sharks
-var sharkAnimation;
-var sharks = [];
+// var sharkAnimation;
+// var sharks = [];
 
 // bubbles
 var bubbleAnimation;
@@ -45,7 +45,7 @@ function preload() {
   //fish animations
   fish1Animation = loadAnimation("images/greenFish/greenFish0000.png", "images/greenFish/greenFish0090.png");
 
-  sharkAnimation = loadAnimation("images/sharks/shark0000.png", "images/sharks/shark0090.png");
+  // sharkAnimation = loadAnimation("images/sharks/shark0000.png", "images/sharks/shark0090.png");
 }
 
 function setup() {
@@ -68,13 +68,14 @@ function setup() {
       // data[5] is bobber id for summer team
       if (data[7].y !== null) {
         // Map between two ranges
-        x = (data[7].y + 3256) * (windowWidth / 3600);
+        x = (data[7].y + 3256) * (windowWidth / 3600) +200;
         y = (data[7].x - 1053) * (windowHeight / 1400);
-        ellipse(x, y, 20, 20);
+        // fill (0);
+        // ellipse(x, y, 20, 20);
 
         // positionvalues of the mocap
-        console.log("X: " + x);
-        console.log("Y: " + y);
+        // console.log("X: " + x);
+        // console.log("Y: " + y);
         // // make sure mocap is under 200 for it to activate
         // console.log("Z: " + mocapZ);
       }
@@ -93,9 +94,9 @@ function setup() {
   castStart = new StartGame();
 
   // POPULATE ARRAY OF FISH OBJECTS AND SHARKS
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < 10; i++) {
     fishes.push(new FishGreen());
-    fishes.push(new Shark());
+    // fishes.push(new Shark());
   }
 
 }
@@ -111,7 +112,7 @@ function draw() {
     castStart.display();
     // did someone hover over our graphic
     var d = dist(x, y, (windowWidth) / 2, (windowHeight) / 2);
-    if (d < 500 && !isGamePlaying) {
+    if (d < 300) {
       // delete animation by creating a new canvas for the game to begin
       isGamePlaying = true;
       water.loop();
@@ -121,8 +122,8 @@ function draw() {
   //START THE TIMER WHEN THE GAME STARTS
   if (isGamePlaying) {
     textAlign(CENTER, TOP);
-    textSize(50);
-    text(timer, windowWidth - 25, 5);
+    textSize(150);
+    text(timer, windowWidth - 100, 5);
   }
 
   // PLAY GAME
@@ -135,7 +136,7 @@ function draw() {
       fishes[i].move();
       fishes[i].display();
 
-      if ((x > fishes[i].x) && (x < fishes[i].x + 80) && (y > fishes[i].y) && (y < fishes[i].y + 80)) {
+      if ((x > fishes[i].x) && (x < fishes[i].x + 150) && (y > fishes[i].y) && (y < fishes[i].y + 150)) {
         //delete fish from array
         fishToBeDeleted = i;
         console.log(fishToBeDeleted);
@@ -148,23 +149,23 @@ function draw() {
     }
 
     // SHARKS
-    var sharksToBeDeleted = -1;
-    for (var i = 0; i < sharks.length; i++) {
-      // if not deleted, keep moving
-      sharks[i].move();
-      sharks[i].display();
+    // var sharksToBeDeleted = -1;
+    // for (var i = 0; i < sharks.length; i++) {
+    //   // if not deleted, keep moving
+    //   sharks[i].move();
+    //   sharks[i].display();
 
-      if ((x > sharks[i].x) && (x < sharks[i].x + 150) && (y > sharks[i].y) && (y < sharks[i].y + 100)) {
-        //delete fish from array
-        sharksToBeDeleted = i;
-        console.log(sharksToBeDeleted);
-        // console.log("HOVER: " + fishes[i].x + ", " + fishes[i].y);
-      }
-    }
+    //   if ((x > sharks[i].x) && (x < sharks[i].x + 300) && (y > sharks[i].y) && (y < sharks[i].y + 300)) {
+    //     //delete fish from array
+    //     sharksToBeDeleted = i;
+    //     console.log(sharksToBeDeleted);
+    //     // console.log("HOVER: " + fishes[i].x + ", " + fishes[i].y);
+    //   }
+    // }
 
-    if (sharksToBeDeleted > -1) {
-      sharks.splice(sharksToBeDeleted, 1);
-    }
+    // if (sharksToBeDeleted > -1) {
+    //   sharks.splice(sharksToBeDeleted, 1);
+    // }
 
     // TIMER CHANGES
     // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
@@ -216,7 +217,7 @@ function FishGreen() {
   // initial left side of the screen
   this.x = random(0, (windowWidth  / 8));
   this.y = random(0, (windowHeight));
-  this.speed = 1;
+  this.speed = random(.5,2);
   this.frame = 0;
   this.numFrames = 91;
 
@@ -227,7 +228,7 @@ function FishGreen() {
   }
 
   this.move = function () {
-    if (this.x > (windowWidth) + 500) {
+    if (this.x > (windowWidth) + 100) {
       this.x = 0;
     }
     this.x += (-this.speed, this.speed);
@@ -239,7 +240,7 @@ function Shark() {
   // initial left side of the screen
   this.x = random(0, (windowWidth) / 8);
   this.y = random(0, (windowHeight));
-  this.speed = 1;
+  this.speed = random(.5,2);
   this.frame = 0;
   this.numFrames = 91;
 
@@ -250,7 +251,7 @@ function Shark() {
   }
 
   this.move = function () {
-    if (this.x > windowWidth + 500) {
+    if (this.x > windowWidth + 100) {
       this.x = 0;
     }
     this.x += (-this.speed, this.speed);
