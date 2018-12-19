@@ -201,17 +201,6 @@ function keyPressed() {
   water.loop();
 }
 
-// function mousePressed() {
-//   if (!isGamePlaying) {
-//     var d = dist(x, y, (windowWidth - 1) / 2, (windowHeight - 1) / 2);
-//     if (d < 100 && !isGamePlaying) {
-//       // delete animation by creating a new canvas for the game to begin
-//       isGamePlaying = true;
-//       water.loop();
-//     }
-//   }
-// }
-
 // FISHES
 function FishGreen() {
   // initial left side of the screen
